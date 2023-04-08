@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Section {
+  id    String  @id @default(uuid())
+  title String
+  note  String?
+  task  Task[]
+}
+
+enum Location {
+  MARRUECOS
+  ECUADOR
+}
+
+enum Person {
+  ABDEL
+  BELKYS
+}
+
+model Task {
+  id        String   @id @default(uuid())
+  title     String
+  note      String?
+  isDone    Boolean  @default(false)
+  location  Location @default(MARRUECOS)
+  person    Person   @default(ABDEL)
+  sectionId String
+  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@index([sectionId])
+}
